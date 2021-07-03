@@ -1,0 +1,18 @@
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  height: 100vh;
+}
+
+body {
+  font-kerning: normal;
+  margin: 0;
+  padding: 0;
+  font-display: swap;
+  overflow-x: hidden;
+}

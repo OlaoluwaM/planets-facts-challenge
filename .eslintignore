@@ -1,0 +1,5 @@
+node_modules
+tailwind.config.js
+jest.config.ts
+jest.config.js
+craco.config.js

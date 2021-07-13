@@ -1,12 +1,12 @@
-import App from './App';
+import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
 
 import { render } from 'react-dom';
 import { StrictMode } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import './index.scss';
-import './tailwind.css';
+import '../src/styles/index.scss';
+import '../src/styles/tailwind.css';
 
 render(
   <StrictMode>

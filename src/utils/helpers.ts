@@ -1,3 +1,5 @@
+import { DeviceTypes, Devices, Dimensions } from '../types/custom.d';
+
 export function hexToRgb(hex: string, alpha = 1): string {
   const { r, g, b } = {
     r: parseInt(hex.substr(1, 2), 16),
@@ -20,4 +22,23 @@ export function normalize<K>(input: K): Filter<K> {
   if (typeof input === 'string' && input === '') returnValue = null;
   if (typeof input === 'object' && Object.keys(input).length === 0) returnValue = null;
   return returnValue as Filter<K>;
+}
+
+export function resolveDeviceTypFromDimension(deviceDimension: Dimensions): Devices {
+  return DeviceTypes[deviceDimension];
+}
+
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export default function debounce<T extends (...args: any[]) => void>(
+  fn: T,
+  ms = 0
+): (this: ThisParameterType<T>, ...args: Parameters<T>) => ReturnType<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  return function (this: ThisParameterType<T>, ...args: Parameters<T>): any {
+    // eslint-disable-next-line
+    clearTimeout(timeoutId!);
+    timeoutId = setTimeout(() => fn.apply(this, args), ms);
+  };
 }

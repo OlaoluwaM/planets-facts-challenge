@@ -26,7 +26,7 @@
   },
   "include": [
     "src/**/*"
-  ],
+, "src/.machines/deviceType.machine.ts"  ],
   "exclude": [
     "node_modules"
   ]

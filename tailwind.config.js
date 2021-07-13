@@ -1,23 +1,29 @@
 const colors = require('tailwindcss/colors');
+const customColors = require('./src/context/build/theme.js');
 
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   presets: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    extend: {
+      colors: {
+        ...customColors,
+      },
+    },
     screens: {
+      mobile: '360px',
       sm: '640px',
-      md: '768px',
+      tablet: '768px',
       lg: '1024px',
       xl: '1280px',
+      desktop: '1440px',
       '2xl': '1536px',
     },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
 
-      black: colors.black,
-      white: colors.white,
       gray: colors.coolGray,
       red: colors.red,
       yellow: colors.amber,
@@ -239,47 +245,27 @@ module.exports = {
       DEFAULT: '1',
     },
     fontFamily: {
-      sans: [
-        'ui-sans-serif',
-        'system-ui',
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        '"Noto Sans"',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-        '"Noto Color Emoji"',
-      ],
-      serif: ['ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
-      mono: [
-        'ui-monospace',
-        'SFMono-Regular',
-        'Menlo',
-        'Monaco',
-        'Consolas',
-        '"Liberation Mono"',
-        '"Courier New"',
-        'monospace',
-      ],
+      primary: ['Antonio', 'sans-serif'],
+      secondary: ['Spartan', 'sans-serif'],
     },
     fontSize: {
+      h4: ['0.688rem', { lineHeight: '25px', letterSpacing: '1' }], // Should be bold
       xs: ['0.75rem', { lineHeight: '1rem' }],
+      h3: ['0.75rem', { lineHeight: '25px', letterSpacing: '2.6' }], // Should be bold
       sm: ['0.875rem', { lineHeight: '1.25rem' }],
+      body: ['0.875rem', { lineHeight: '25px' }],
       base: ['1rem', { lineHeight: '1.5rem' }],
       lg: ['1.125rem', { lineHeight: '1.75rem' }],
       xl: ['1.25rem', { lineHeight: '1.75rem' }],
       '2xl': ['1.5rem', { lineHeight: '2rem' }],
       '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
       '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+      h2: ['2.5rem', { lineHeight: '52px', letterSpacing: '-1.5' }],
       '5xl': ['3rem', { lineHeight: '1' }],
       '6xl': ['3.75rem', { lineHeight: '1' }],
       '7xl': ['4.5rem', { lineHeight: '1' }],
       '8xl': ['6rem', { lineHeight: '1' }],
+      h1: ['6rem', { lineHeight: '103px' }],
       '9xl': ['8rem', { lineHeight: '1' }],
     },
     fontWeight: {

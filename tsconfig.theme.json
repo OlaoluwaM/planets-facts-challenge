@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "noEmit": false,
+    "target": "ESNext",
+    "module": "commonjs",
+    "outDir": "./src/context/build"
+  },
+  "files": ["src/context/theme.ts"]
+}

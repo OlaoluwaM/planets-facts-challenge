@@ -1,3 +1,5 @@
 node_modules
 optIn*
 .vscode
+src/context/build
+src/components/Background.tsx

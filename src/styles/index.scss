@@ -1,3 +1,11 @@
+:root {
+  --primaryFont: 'Antonio', 'sans-serif';
+  --secondaryFont: 'Spartan', 'sans-serif';
+}
+
+$primaryFont: var(--primaryFont);
+$secondaryFont: var(--secondaryFont);
+
 * {
   box-sizing: border-box;
   scroll-behavior: smooth;

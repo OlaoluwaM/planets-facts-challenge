@@ -1,16 +1,11 @@
 const colors = require('tailwindcss/colors');
-const customColors = require('./src/context/build/theme.js');
+const customColors = require('./src/context/build/context/theme.js');
 
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   presets: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {
-      colors: {
-        ...customColors,
-      },
-    },
     screens: {
       mobile: '360px',
       sm: '640px',
@@ -23,8 +18,10 @@ module.exports = {
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
-
-      gray: colors.coolGray,
+      black: customColors.themeObj.black,
+      white: customColors.themeObj.white,
+      gray: customColors.themeObj.gray,
+      ...customColors.themeObj.planet,
       red: colors.red,
       yellow: colors.amber,
       green: colors.emerald,

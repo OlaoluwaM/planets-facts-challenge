@@ -1,4 +1,6 @@
-type BaseColors = 'black' | 'white' | 'lightGray' | 'darkGray';
+import { PLANET_NAMES } from '../utils/constants';
+
+type BaseColors = 'black' | 'white' | 'gray';
 type PlanetAccentColors =
   | 'mercury'
   | 'venus'
@@ -9,10 +11,32 @@ type PlanetAccentColors =
   | 'uranus'
   | 'neptune';
 
-type Shades = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+type Shades =
+  | 100
+  | 200
+  | 300
+  | 400
+  | 500
+  | 'DEFAULT'
+  | 'mobileNav'
+  | 600
+  | 700
+  | 800
+  | 900;
 
-export type ThemeInterface = Record<BaseColors, string> & {
-  planet: Partial<Record<PlanetAccentColors, Record<Shades, string>>>;
+// If these aren't being used you can delete them
+type ShadesNumericKeys = Extract<Shades, number>;
+type ShadesStringKeys = Extract<Shades, string>;
+
+type ShadesWithoutMobileNavKey = Exclude<Shades, 'mobileNav'>;
+
+export type ShadeInterface = Partial<Record<ShadesNumericKeys, string>>;
+
+export type ThemeInterface = Record<
+  BaseColors,
+  Partial<Record<ShadesWithoutMobileNavKey, string>>
+> & {
+  planet: Partial<Record<PlanetAccentColors, Partial<Record<Shades, string>>>>;
 };
 
 export enum DeviceDimensions {
@@ -29,3 +53,4 @@ export enum DeviceTypes {
 
 export type Devices = keyof typeof DeviceDimensions;
 export type Dimensions = keyof typeof DeviceTypes;
+export type Planets = typeof PLANET_NAMES[number];

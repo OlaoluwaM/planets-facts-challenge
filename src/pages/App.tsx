@@ -11,8 +11,8 @@ import { LazyMotion, domAnimation, AnimateSharedLayout } from 'framer-motion';
 const GlobalStyle = createGlobalStyle`
   body {
     background: fixed url(${backgroundImageSvg}) no-repeat center;
-    background-color: ${({ theme }) => theme.black};
-    color: ${({ theme }) => theme.white}
+    background-color: ${({ theme }) => theme.black.DEFAULT};
+    color: ${({ theme }) => theme.white.DEFAULT}
   }
 `;
 

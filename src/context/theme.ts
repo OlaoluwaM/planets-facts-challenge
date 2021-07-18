@@ -1,23 +1,55 @@
 import type { ThemeInterface } from '../types/custom';
 
 export const themeObj: ThemeInterface = {
-  black: '#070724', // This is the base color
-  white: '#fff',
+  black: { DEFAULT: '#070724' },
+  white: { DEFAULT: '#fff' },
 
-  lightGray: '#838391',
-  darkGray: '#38384F',
+  gray: {
+    200: '#38384F',
+    DEFAULT: '#979797',
+    700: '#838391',
+  },
+
   // These are accent colors
   planet: {
     mercury: {
-      100: '#d9ecf1',
-      200: '#b3d8e4',
-      300: '#8dc5d6',
-      400: '#67b1c9',
-      500: '#419ebb',
-      600: '#347e96',
-      700: '#275f70',
-      800: '#1a3f4b',
-      900: '#0d2025',
+      mobileNav: '#DEF4FC',
+      DEFAULT: '#419ebb',
+    },
+
+    venus: {
+      mobileNav: '#F6D1A4',
+      DEFAULT: '#EDA249',
+    },
+
+    earth: {
+      mobileNav: '#545BFE',
+      DEFAULT: '#6f2ed6',
+    },
+
+    mars: {
+      mobileNav: '#FF6A45',
+      DEFAULT: '#D14C32',
+    },
+
+    jupiter: {
+      mobileNav: '#ECAD7A',
+      DEFAULT: '#ECAD7A',
+    },
+
+    saturn: {
+      mobileNav: '#FCCB6B',
+      DEFAULT: '#FCCB6B',
+    },
+
+    uranus: {
+      mobileNav: '#65F0D5',
+      DEFAULT: '#1ec2a4',
+    },
+
+    neptune: {
+      mobileNav: '#497EFA',
+      DEFAULT: '#2d68f0',
     },
   },
 };

@@ -4,28 +4,10 @@ import NavChevron from './NavRightChevron';
 
 import { PLANET_NAMES } from '../utils/constants';
 import { m as motion, Variants } from 'framer-motion';
+import { generalWrapperVariants } from '../reusables/others/variants';
 
 import type { Planets } from '../types/custom';
 import type { ReactElement } from 'react';
-
-const navMenuVariants: Variants = {
-  visible: {
-    opacity: 1,
-    transition: {
-      when: 'beforeChildren',
-      staggerChildren: 0.05,
-    },
-  },
-
-  hidden: {
-    opacity: 0,
-    transition: {
-      when: 'afterChildren',
-      staggerChildren: 0.05,
-      staggerDirection: -1,
-    },
-  },
-};
 
 const navMenuListItemTextVariants: Variants = {
   visible: {
@@ -40,7 +22,7 @@ const navMenuListItemTextVariants: Variants = {
 };
 
 const NavMenu = styled(motion.ul).attrs({
-  variants: navMenuVariants,
+  variants: generalWrapperVariants,
   animate: 'visible',
   initial: 'hidden',
   exit: 'hidden',

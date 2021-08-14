@@ -2,11 +2,14 @@ import Color from 'color';
 import styled from 'styled-components';
 import NavChevron from './NavRightChevron';
 
+import { m as motion } from 'framer-motion';
 import { PLANET_NAMES } from '../utils/constants';
-import { m as motion, Variants } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
+import { getLastPathSegment } from '../utils/helpers';
 import { generalWrapperVariants } from '../reusables/others/variants';
 
 import type { Planets } from '../types/custom';
+import type { Variants } from 'framer-motion';
 import type { ReactElement } from 'react';
 
 const navMenuListItemTextVariants: Variants = {
@@ -21,8 +24,24 @@ const navMenuListItemTextVariants: Variants = {
   },
 };
 
+const navMenuVariants: Variants = {
+  visible: {
+    ...generalWrapperVariants.visible,
+    transition: {
+      when: 'beforeChildren',
+    },
+  },
+
+  hidden: {
+    ...generalWrapperVariants.hidden,
+    transition: {
+      when: 'afterChildren',
+    },
+  },
+};
+
 const NavMenu = styled(motion.ul).attrs({
-  variants: generalWrapperVariants,
+  variants: navMenuVariants,
   animate: 'visible',
   initial: 'hidden',
   exit: 'hidden',
@@ -30,19 +49,18 @@ const NavMenu = styled(motion.ul).attrs({
 })`
   top: 103%;
   background: ${({ theme }) => theme.black['DEFAULT']};
+  z-index: 1;
 `;
 
 const NavMenuItem = styled(motion.li).attrs({
-  className: 'flex uppercase items-center py-4 mb-4 relative',
+  className: 'py-4 mb-4 relative generic-border-bottom',
 })`
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  border-bottom: ${({ theme }) =>
-    `.5px solid ${Color(theme.gray.DEFAULT).hsl().alpha(0.2)}`};
 
   :first-of-type {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   :last-of-type {
@@ -51,16 +69,21 @@ const NavMenuItem = styled(motion.li).attrs({
   }
   overflow: hidden;
 
-  p {
-    font-family: var(--secondaryFont);
-    font-weight: bold;
-    letter-spacing: 1.35px;
-    font-size: 0.938rem;
-    line-height: 100%;
-  }
+  a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    text-transform: uppercase;
+    align-items: center;
 
-  & > svg {
-    stroke: ${({ theme }) => theme.black['DEFAULT']};
+    p {
+      font-family: var(--secondaryFont);
+      font-weight: bold;
+    }
+
+    & > svg {
+      stroke: ${({ theme }) => theme.black['DEFAULT']};
+    }
   }
 
   div {
@@ -78,22 +101,29 @@ interface MobileNavProps {
 }
 
 export default function MobileNavMenu({ setPlanet }: MobileNavProps): ReactElement {
+  const { pathname } = useLocation();
+
   return (
     <NavMenu>
       {PLANET_NAMES.map(planet => (
         <NavMenuItem onClick={() => setPlanet(planet)} key={planet}>
-          <motion.svg
-            variants={navMenuListItemTextVariants}
-            className={`mr-10 fill-current text-${planet.toLocaleLowerCase()}-mobileNav`}
-            width='20'
-            height='20'
-            viewBox='0 0 20 20'>
-            <motion.circle cx='50%' cy='50%' r='10'></motion.circle>
-          </motion.svg>
-          <motion.p whileTap={{ opacity: 0.2 }} variants={navMenuListItemTextVariants}>
-            {planet}
-          </motion.p>
-          <NavChevron variants={navMenuListItemTextVariants} className='mr-3' />
+          <Link to={`/${planet.toLocaleLowerCase()}/${getLastPathSegment(pathname)}`}>
+            <motion.svg
+              variants={navMenuListItemTextVariants}
+              className={`mr-10 fill-current text-${planet.toLocaleLowerCase()}-mobileNav`}
+              width='20'
+              height='20'
+              viewBox='0 0 20 20'>
+              <motion.circle cx='50%' cy='50%' r='10'></motion.circle>
+            </motion.svg>
+            <motion.p
+              whileTap={{ opacity: 0.2 }}
+              variants={navMenuListItemTextVariants}
+              className='text-navBase'>
+              {planet}
+            </motion.p>
+            <NavChevron variants={navMenuListItemTextVariants} className='mr-3' />
+          </Link>
         </NavMenuItem>
       ))}
     </NavMenu>

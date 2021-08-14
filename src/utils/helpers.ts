@@ -29,7 +29,7 @@ export function resolveDeviceTypFromDimension(deviceDimension: Dimensions): Devi
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export default function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: any[]) => void>(
   fn: T,
   ms = 0
 ): (this: ThisParameterType<T>, ...args: Parameters<T>) => ReturnType<T> {
@@ -41,4 +41,9 @@ export default function debounce<T extends (...args: any[]) => void>(
     clearTimeout(timeoutId!);
     timeoutId = setTimeout(() => fn.apply(this, args), ms);
   };
+}
+
+export function getLastPathSegment(path: string): string {
+  const indexOfLastBackslash = path.lastIndexOf('/');
+  return path.slice(indexOfLastBackslash + 1);
 }

@@ -3,11 +3,7 @@
     "incremental": true,
     "target": "ES2020",
     "module": "ESNEXT",
-    "lib": [
-      "DOM",
-      "ESNext",
-      "DOM.Iterable"
-    ],
+    "lib": ["DOM", "ESNext", "DOM.Iterable"],
     "jsx": "react-jsx",
     "sourceMap": true,
     "outDir": "build",
@@ -24,10 +20,6 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "include": [
-    "src/**/*"
-, "src/.machines/deviceType.machine.ts"  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

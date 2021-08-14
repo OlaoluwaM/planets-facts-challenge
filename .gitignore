@@ -3,3 +3,4 @@ optIn*
 .vscode
 src/context/build
 src/components/Background.tsx
+nohup*

@@ -1,4 +1,4 @@
-import debounce from '../utils/helpers';
+import { debounce } from '../utils/helpers';
 
 import { createModel } from 'xstate/lib/model';
 import { Devices, Dimensions, DeviceDimensions } from '../types/custom.d';

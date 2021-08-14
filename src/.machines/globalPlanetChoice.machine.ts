@@ -1,5 +1,7 @@
-import { PLANET_NAMES } from '../utils/constants';
-import { createMachine } from 'xstate';
+import planetData from '../assets/data.json';
+
+import { PLANET_NAMES, STARTING_PLANET } from '../utils/constants';
+import { AssignAction, createMachine, assign } from 'xstate';
 
 import type { Planets } from '../types/custom';
 
@@ -11,8 +13,13 @@ type PlanetStateEvents<PTE extends Planets | 'none' = 'none'> = {
 
 type PlanetMachineStates = {
   [P in Lowercase<Planets>]: {
+    entry: AssignAction<MachineContext, CreateMachineEventsType<Planets>>;
     on: PlanetStateEvents<Capitalize<P>>;
   };
+};
+
+type MachineContext = {
+  planetFacts?: typeof planetData[number];
 };
 
 function createPlanetStateEvents<PlanetToExclude extends Planets>(
@@ -40,7 +47,14 @@ function createPlanetStateEvents<PlanetToExclude extends Planets>(
 }
 
 const machineStates = PLANET_NAMES.reduce((stateObj, planetName) => {
-  stateObj[planetName.toLocaleLowerCase() as keyof PlanetMachineStates] = {
+  const stateName = planetName.toLocaleLowerCase() as keyof PlanetMachineStates;
+
+  stateObj[stateName] = {
+    entry: assign<MachineContext, CreateMachineEventsType<Planets>>({
+      planetFacts: () => {
+        return planetData.find(({ name }) => name === planetName);
+      },
+    }),
     on: createPlanetStateEvents(planetName) as Extract<
       PlanetStateEvents,
       typeof planetName
@@ -50,7 +64,7 @@ const machineStates = PLANET_NAMES.reduce((stateObj, planetName) => {
 }, {} as PlanetMachineStates);
 
 type ConvertToTypeState<T extends string> = T extends Planets
-  ? { value: Lowercase<T>; context: unknown }
+  ? { value: Lowercase<T>; context: MachineContext }
   : never;
 
 type CreateMachineEventsType<T extends string> = T extends Planets
@@ -58,11 +72,14 @@ type CreateMachineEventsType<T extends string> = T extends Planets
   : never;
 
 const planetChoiceMachine = createMachine<
-  unknown,
+  MachineContext,
   CreateMachineEventsType<Planets>,
   ConvertToTypeState<Planets>
 >({
-  initial: PLANET_NAMES[0].toLocaleLowerCase(),
+  context: {
+    planetFacts: undefined,
+  },
+  initial: STARTING_PLANET,
   states: machineStates,
 });
 

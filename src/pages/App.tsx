@@ -1,13 +1,19 @@
 import Nav from '../components/Navbar';
+import GenericPlanetPage from './PlanetInfoPage';
 import backgroundImageSvg from '../assets/background-stars.svg';
 
 import { themeObj } from '../context/theme';
+import { Suspense } from 'react';
+import { PlanetProvider } from '../context/PlanetContext';
+import { LazyMotion, domMax } from 'framer-motion';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { Suspense, ReactElement } from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
-import { LazyMotion, domAnimation, AnimateSharedLayout } from 'framer-motion';
-
+import { Redirect, Route, BrowserRouter as Router } from 'react-router-dom';
+import { STARTING_PLANET, lowercasePlanetNamesPartialRegex } from '../utils/constants';
+import { AnimatedRoutes } from '../components/AnimatedRoutes';
 // Use domMax instead of domAnimation if you plan on having layout animations
+
+import type { ReactElement } from 'react';
+
 const GlobalStyle = createGlobalStyle`
   body {
     background: fixed url(${backgroundImageSvg}) no-repeat center;
@@ -17,23 +23,31 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export default function App(): ReactElement {
-  const location = useLocation();
-
   return (
     <ThemeProvider theme={themeObj}>
-      <LazyMotion features={domAnimation} strict>
+      <LazyMotion features={domMax} strict>
         <GlobalStyle />
-        <Nav />
-        <AnimateSharedLayout>
-          {/* TODO would like to have a galaxy animation for loading */}
-          <Suspense fallback={<p>Loading</p>}>
-            <Switch location={location} key={location.pathname}>
-              <Route exact path='/:planetName'>
-                <div>Hello World</div>
+        <PlanetProvider>
+          <Router>
+            <Nav />
+            {/* TODO would like to have a galaxy animation for loading */}
+            {/* <Suspense fallback={<p>Loading</p>}> */}
+            <AnimatedRoutes>
+              <Route exact path='/'>
+                <Redirect to={`/${STARTING_PLANET}/overview`} />
               </Route>
-            </Switch>
-          </Suspense>
-        </AnimateSharedLayout>
+
+              <Route path={`/:planetName(${lowercasePlanetNamesPartialRegex})`}>
+                <GenericPlanetPage />
+              </Route>
+
+              <Route path='*'>
+                <div>404</div>
+              </Route>
+            </AnimatedRoutes>
+            {/* </Suspense> */}
+          </Router>
+        </PlanetProvider>
       </LazyMotion>
     </ThemeProvider>
   );

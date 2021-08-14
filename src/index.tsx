@@ -3,16 +3,13 @@ import reportWebVitals from './reportWebVitals';
 
 import { render } from 'react-dom';
 import { StrictMode } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 
 import '../src/styles/index.scss';
 import '../src/styles/tailwind.css';
 
 render(
   <StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <App />
   </StrictMode>,
   document.getElementById('root')
 );

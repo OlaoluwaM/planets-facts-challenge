@@ -1,6 +1,7 @@
 node_modules
 optIn*
 .vscode
+package-lock.json
 src/context/build
 src/components/Background.tsx
 nohup*

@@ -246,11 +246,12 @@ module.exports = {
       secondary: ['Spartan', 'sans-serif'],
     },
     fontSize: {
-      h4: ['0.688rem', { lineHeight: '25px', letterSpacing: '1' }], // Should be bold
-      xs: ['0.75rem', { lineHeight: '1rem' }],
-      h3: ['0.75rem', { lineHeight: '25px', letterSpacing: '2.6' }], // Should be bold
+      '3xs': ['9px', { letterSpacing: '1.93px' }],
+      '2xs': ['0.688rem', { lineHeight: '25px', letterSpacing: '1' }], // Should be bold
+      xs: ['0.75rem', { lineHeight: '25px', letterSpacing: '2.6' }],
       sm: ['0.875rem', { lineHeight: '1.25rem' }],
       body: ['0.875rem', { lineHeight: '25px' }],
+      navBase: ['0.938', { letterSpacing: '1.35px', lineHeight: '100%' }],
       base: ['1rem', { lineHeight: '1.5rem' }],
       lg: ['1.125rem', { lineHeight: '1.75rem' }],
       xl: ['1.25rem', { lineHeight: '1.75rem' }],

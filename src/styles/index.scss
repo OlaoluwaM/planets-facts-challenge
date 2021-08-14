@@ -24,3 +24,16 @@ body {
   font-display: swap;
   overflow-x: hidden;
 }
+
+.generic-border-bottom {
+  --borderColor: #9797974d;
+  border-bottom: 0.5px solid var(--borderColor);
+}
+
+.inactive-link {
+  color: change-color($color: #ffffff, $lightness: 50%, $alpha: 1);
+}
+
+.active-link {
+  color: change-color($color: #ffffff, $lightness: 100%, $alpha: 1);
+}

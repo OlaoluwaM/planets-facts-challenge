@@ -1,11 +1,11 @@
 import planetChoiceMachine from '../.machines/globalPlanetChoice.machine';
 
 import { useMachine } from '@xstate/react';
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 
 import type { ReactElement } from 'react';
 import type { StateFrom, EventFrom, EventData } from 'xstate';
-import { count } from 'console';
+import { PLANET_STATE_SESSION_STORAGE_KEY } from './build/utils/constants';
 
 interface ContextInterface {
   state: StateFrom<typeof planetChoiceMachine>;
@@ -32,14 +32,23 @@ export function PlanetProvider({
 }: {
   children: ReactElement[] | ReactElement;
 }): ReactElement {
-  const [state, send] = useMachine(planetChoiceMachine);
+  const [state, send, service] = useMachine(planetChoiceMachine);
+
+  useEffect(() => {
+    const subscription = service.subscribe(state => {
+      if (!state.changed) return;
+      sessionStorage.setItem(PLANET_STATE_SESSION_STORAGE_KEY, state.value as string);
+    });
+
+    return subscription.unsubscribe;
+  }, []);
 
   const memoizedContextValue = useMemo<ContextInterface>(
     () => ({
       state,
       sendEvent: send,
     }),
-    [state]
+    [state.value]
   );
 
   return (

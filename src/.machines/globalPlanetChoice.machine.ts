@@ -1,7 +1,11 @@
 import planetData from '../assets/data.json';
 
-import { PLANET_NAMES, STARTING_PLANET } from '../utils/constants';
 import { AssignAction, createMachine, assign } from 'xstate';
+import {
+  PLANET_NAMES,
+  STARTING_PLANET,
+  PLANET_STATE_SESSION_STORAGE_KEY,
+} from '../utils/constants';
 
 import type { Planets } from '../types/custom';
 
@@ -14,7 +18,7 @@ type PlanetStateEvents<PTE extends Planets | 'none' = 'none'> = {
 type PlanetMachineStates = {
   [P in Lowercase<Planets>]: {
     entry: AssignAction<MachineContext, CreateMachineEventsType<Planets>>;
-    on: PlanetStateEvents<Capitalize<P>>;
+    on: PlanetStateEvents<Capitalize<P>> & { always: { target: string } };
   };
 };
 
@@ -48,20 +52,25 @@ function createPlanetStateEvents<PlanetToExclude extends Planets>(
 
 const machineStates = PLANET_NAMES.reduce((stateObj, planetName) => {
   const stateName = planetName.toLocaleLowerCase() as keyof PlanetMachineStates;
-
   stateObj[stateName] = {
     entry: assign<MachineContext, CreateMachineEventsType<Planets>>({
       planetFacts: () => {
         return planetData.find(({ name }) => name === planetName);
       },
     }),
+
     on: createPlanetStateEvents(planetName) as Extract<
       PlanetStateEvents,
       typeof planetName
     >,
   };
+
   return stateObj;
 }, {} as PlanetMachineStates);
+
+function getInitialStateFromSessionStorage(): string | null {
+  return sessionStorage.getItem(PLANET_STATE_SESSION_STORAGE_KEY);
+}
 
 type ConvertToTypeState<T extends string> = T extends Planets
   ? { value: Lowercase<T>; context: MachineContext }
@@ -79,7 +88,8 @@ const planetChoiceMachine = createMachine<
   context: {
     planetFacts: undefined,
   },
-  initial: STARTING_PLANET,
+  initial: getInitialStateFromSessionStorage() ?? STARTING_PLANET,
+
   states: machineStates,
 });
 

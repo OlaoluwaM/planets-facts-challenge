@@ -1,6 +1,7 @@
 :root {
   --primaryFont: 'Antonio', 'sans-serif';
   --secondaryFont: 'Spartan', 'sans-serif';
+  --borderColor: #9797974d;
 }
 
 $primaryFont: var(--primaryFont);
@@ -14,7 +15,7 @@ $secondaryFont: var(--secondaryFont);
 html,
 body,
 #root {
-  height: 100vh;
+  height: 100%;
 }
 
 body {
@@ -26,11 +27,10 @@ body {
 }
 
 .generic-border-bottom {
-  --borderColor: #9797974d;
   border-bottom: 0.5px solid var(--borderColor);
 }
 
-.inactive-link {
+.inactive-text {
   color: change-color($color: #ffffff, $lightness: 50%, $alpha: 1);
 }
 

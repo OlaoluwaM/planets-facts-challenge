@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 
 import { usePlanet } from '../context/PlanetContext';
-import { AnimateSharedLayout, m as motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { NavLink, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { ReactElement, useEffect } from 'react';
-import { Planets } from '../types/custom';
+import type { ReactElement } from 'react';
 
 const DataPickerWrapper = styled.ul.attrs({
   className:
@@ -17,7 +16,7 @@ const DataPickerWrapper = styled.ul.attrs({
 `;
 
 const DataItem = styled.li.attrs({
-  className: 'inactive-link relative',
+  className: 'inactive-text relative',
 })`
   height: 100%;
 
@@ -80,7 +79,7 @@ function ActiveUnderline({ planetName }: { planetName: string }): ReactElement {
       layoutId='nav-underline'
       initial={false}
       animate={{ y: 0 }}
-      transition={{ type: 'spring', bounce: 0.5 }}
+      transition={{ type: 'spring', bounce: 0.5, delay: 0.3 }}
       className={`h-2 inset-x-0 bg-${planetName} absolute`}
     />
   );

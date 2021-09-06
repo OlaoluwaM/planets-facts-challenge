@@ -45,15 +45,15 @@ const NavMenu = styled(motion.ul).attrs({
   animate: 'visible',
   initial: 'hidden',
   exit: 'hidden',
-  className: 'absolute w-full',
+  className: 'absolute w-full flex flex-col',
 })`
-  top: 103%;
+  top: 110%;
   background: ${({ theme }) => theme.black['DEFAULT']};
   z-index: 1;
 `;
 
 const NavMenuItem = styled(motion.li).attrs({
-  className: 'py-4 mb-4 relative generic-border-bottom',
+  className: 'py-4 mb-4 relative generic-border-bottom flex-grow',
 })`
   width: 90%;
   margin-left: auto;
@@ -64,7 +64,7 @@ const NavMenuItem = styled(motion.li).attrs({
   }
 
   :last-of-type {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     border-bottom: none;
   }
   overflow: hidden;

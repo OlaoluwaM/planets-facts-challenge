@@ -45,19 +45,20 @@ const NavMenu = styled(motion.ul).attrs({
   animate: 'visible',
   initial: 'hidden',
   exit: 'hidden',
-  className: 'absolute w-full flex flex-col',
+  className: 'absolute w-full flex flex-col items-center',
 })`
   top: 110%;
   background: ${({ theme }) => theme.black['DEFAULT']};
   z-index: 1;
+  left: 0;
 `;
 
 const NavMenuItem = styled(motion.li).attrs({
   className: 'py-4 mb-4 relative generic-border-bottom flex-grow',
 })`
   width: 90%;
-  margin-left: auto;
   margin-right: auto;
+  margin-left: auto;
 
   :first-of-type {
     margin-top: 1rem;
@@ -76,11 +77,6 @@ const NavMenuItem = styled(motion.li).attrs({
     text-transform: uppercase;
     align-items: center;
 
-    p {
-      font-family: var(--secondaryFont);
-      font-weight: bold;
-    }
-
     & > svg {
       stroke: ${({ theme }) => theme.black['DEFAULT']};
     }
@@ -96,11 +92,11 @@ const NavMenuItem = styled(motion.li).attrs({
   }
 `;
 
-interface MobileNavProps {
+interface MobileNavMenuProps {
   setPlanet: (planetName: Planets) => void;
 }
 
-export default function MobileNavMenu({ setPlanet }: MobileNavProps): ReactElement {
+export default function MobileNavMenu({ setPlanet }: MobileNavMenuProps): ReactElement {
   const { pathname } = useLocation();
 
   return (
@@ -116,12 +112,14 @@ export default function MobileNavMenu({ setPlanet }: MobileNavProps): ReactEleme
               viewBox='0 0 20 20'>
               <motion.circle cx='50%' cy='50%' r='10'></motion.circle>
             </motion.svg>
+
             <motion.p
               whileTap={{ opacity: 0.2 }}
               variants={navMenuListItemTextVariants}
-              className='text-navBase'>
+              className='text-navBase nav-text'>
               {planet}
             </motion.p>
+
             <NavChevron variants={navMenuListItemTextVariants} className='mr-3' />
           </Link>
         </NavMenuItem>
@@ -129,3 +127,15 @@ export default function MobileNavMenu({ setPlanet }: MobileNavProps): ReactEleme
     </NavMenu>
   );
 }
+
+// export function MobileNavMenu(): ReactElement {
+//   return <>        <IconBurger
+//           menuOpen={showMenu}
+//           className='cursor-pointer'
+//           onClick={handleClick}
+//         />
+//       </div>
+//       <AnimatePresence>
+//         {showMenu && <MobileNavMenu setPlanet={selectPlanetToDisplay} />}
+//       </AnimatePresence></>
+// }

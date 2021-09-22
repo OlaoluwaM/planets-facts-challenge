@@ -4,11 +4,10 @@ import styled from 'styled-components';
 import { m as motion, MotionProps } from 'framer-motion';
 import { ReactComponent as NavBurger } from '../assets/icon-hamburger.svg';
 
-import type { CSSProperties, ReactElement, ComponentPropsWithoutRef } from 'react';
+import type { MotionComponentProps } from 'types/custom';
+import type { CSSProperties, ReactElement } from 'react';
 
-type TypeSynthesis = Omit<ComponentPropsWithoutRef<'div'>, keyof MotionProps>;
-
-interface IconBurgerProps extends TypeSynthesis, MotionProps {
+interface IconBurgerProps extends MotionComponentProps, MotionProps {
   style?: CSSProperties;
   menuOpen: boolean;
 }

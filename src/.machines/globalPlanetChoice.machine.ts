@@ -23,7 +23,7 @@ type PlanetMachineStates = {
 };
 
 type MachineContext = {
-  planetFacts?: typeof planetData[number];
+  planetFacts: typeof planetData[number];
 };
 
 function createPlanetStateEvents<PlanetToExclude extends Planets>(
@@ -55,7 +55,7 @@ const machineStates = PLANET_NAMES.reduce((stateObj, planetName) => {
   stateObj[stateName] = {
     entry: assign<MachineContext, CreateMachineEventsType<Planets>>({
       planetFacts: () => {
-        return planetData.find(({ name }) => name === planetName);
+        return planetData.find(({ name }) => name === planetName) ?? planetData[0];
       },
     }),
 
@@ -86,7 +86,7 @@ const planetChoiceMachine = createMachine<
   ConvertToTypeState<Planets>
 >({
   context: {
-    planetFacts: undefined,
+    planetFacts: planetData[0],
   },
   initial: getInitialStateFromSessionStorage() ?? STARTING_PLANET,
 

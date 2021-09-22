@@ -3,21 +3,93 @@ import IconBurger from './NavBurgerIcon';
 import MobileNavMenu from './MobileNavMenu';
 import mobileNavToggleMachine from '../.machines/mobleNav.machine';
 
+import { useRef } from 'react';
 import { usePlanet } from '../context/PlanetContext';
 import { useMachine } from '@xstate/react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, m as motion } from 'framer-motion';
+import { DeviceDimensions, PLANET_NAMES } from '../utils/constants';
 
 import type { Planets } from '../types/custom';
-import type { ReactElement } from 'react';
+import type { MutableRefObject, ReactElement } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { getLastPathSegment } from 'utils/helpers';
 
 const NavBarWrapper = styled.nav`
   &.open + main {
     display: none;
   }
+
+  .normal-nav {
+    display: none;
+  }
+
+  @media only screen and (min-width: ${DeviceDimensions.Tablet}),
+    (max-height: ${DeviceDimensions.Tablet}) {
+    & > h5 {
+      margin-top: 0.875rem;
+      font-size: 1.75rem;
+    }
+
+    & {
+      flex-direction: column;
+      padding-bottom: 0.75rem;
+    }
+
+    & .mobile-nav-burger {
+      display: none;
+    }
+
+    .normal-nav {
+      display: flex;
+      padding-bottom: 0px;
+
+      li {
+        display: inline-block;
+        opacity: 0.5;
+      }
+    }
+  }
 `;
 
-export default function Nav(): ReactElement {
-  const [state, send] = useMachine(mobileNavToggleMachine);
+function selectPlanetToDisplay(
+  planetName: Planets,
+  sendEvent: ReturnType<typeof usePlanet>['sendEvent'],
+  callback?: () => void
+): void {
+  sendEvent({ type: planetName.toLocaleUpperCase() as Uppercase<Planets> });
+  callback?.();
+}
+
+function TabletNav() {
+  const { pathname } = useLocation();
+  const { sendEvent } = usePlanet();
+
+  const handlePlanetChange = (planetName: Planets) => {
+    selectPlanetToDisplay(planetName, sendEvent);
+  };
+
+  return (
+    <ul className='m-0 mt-6 mb-3 p-4 w-full px-5 flex justify-around items-center normal-nav'>
+      {PLANET_NAMES.map(planetName => (
+        <motion.li
+          key={planetName}
+          className='text-2xs nav-text'
+          onClick={() => handlePlanetChange(planetName)}>
+          <Link to={`/${planetName.toLocaleLowerCase()}/${getLastPathSegment(pathname)}`}>
+            {planetName}
+          </Link>
+        </motion.li>
+      ))}
+    </ul>
+  );
+}
+interface MobileNavPropInterface {
+  toggleNavStateClass: () => void;
+}
+
+function MobileNav({ toggleNavStateClass }: MobileNavPropInterface): ReactElement {
+  // Subscribe to the service so when the `CLOSE_MENU` event is emitted we toggle the `open` class
+  const [state, send, service] = useMachine(mobileNavToggleMachine);
   const showMenu = state.matches('open');
 
   const { sendEvent } = usePlanet();
@@ -27,61 +99,46 @@ export default function Nav(): ReactElement {
       ? 'CLOSE_MENU'
       : 'OPEN_MENU';
 
+    toggleNavStateClass();
     send({ type: eventToSend });
   };
 
-  const selectPlanetToDisplay = (planetName: Planets) => {
-    console.log({ planetName });
-    sendEvent({ type: planetName.toLocaleUpperCase() as Uppercase<Planets> });
-    send({ type: 'CLOSE_MENU' });
+  const handlePlanetChange = (planet: Planets) => {
+    selectPlanetToDisplay(planet, sendEvent, () => send({ type: 'CLOSE_MENU' }));
+    toggleNavStateClass();
   };
 
-  const navClassNames = `w-full max-h-40 flex px-5 py-6 flex flex-col items-center relative generic-border-bottom ${
-    showMenu ? 'open' : 'closed'
-  }`;
-
   return (
-    <NavBarWrapper className={navClassNames}>
-      <div className='flex justify-between items-center w-full'>
-        <h5 className='uppercase font-primary text-3xl'>the Planets</h5>
-        <IconBurger
-          menuOpen={showMenu}
-          className='cursor-pointer'
-          onClick={handleClick}
-        />
-      </div>
+    <>
+      <IconBurger
+        menuOpen={showMenu}
+        className='cursor-pointer mobile-nav-burger'
+        onClick={handleClick}
+      />
       <AnimatePresence>
-        {showMenu && <MobileNavMenu setPlanet={selectPlanetToDisplay} />}
+        {showMenu && <MobileNavMenu setPlanet={handlePlanetChange} />}
       </AnimatePresence>
-    </NavBarWrapper>
+    </>
   );
 }
 
-// interface GenericComponentProps {
-//   name?: 'Tablet' | 'Desktop';
-// }
+function handleMobileNavStateClass({ current }: MutableRefObject<HTMLElement | null>) {
+  const navElement = current;
+  if (!navElement) return;
+  navElement.classList.toggle('open');
+}
 
-// const GenericComponent: FC<GenericComponentProps> = ({ name }): ReactElement => {
-//   return <h1>{name}</h1>;
-// };
+const navWrapperClassNames = `w-full min-h-40 flex px-5 py-6 flex items-center justify-between relative generic-border-bottom`;
 
-// GenericComponent.displayName = 'Generic Component';
+export default function Nav(): ReactElement {
+  const wrapperRef = useRef<HTMLElement>(null);
 
-// const NavDeviceTypeResolver: {
-//   Mobile: FC;
-//   Tablet: FC<GenericComponentProps>;
-//   Desktop: FC<GenericComponentProps>;
-// } = {
-//   Mobile: MobileNav,
-//   Tablet: GenericComponent.bind(null, { name: 'Tablet' }),
-//   Desktop: GenericComponent.bind(null, { name: 'Desktop' }),
-// };
+  return (
+    <NavBarWrapper ref={wrapperRef} className={navWrapperClassNames}>
+      <h5 className='uppercase font-primary text-3xl'>the Planets</h5>
 
-// export default function Nav(): ReactElement {
-//   const { deviceType } = useDeviceType();
-
-//   const ComponentToRender = NavDeviceTypeResolver[deviceType!];
-
-//   if (!deviceType) return <h1>Hello World</h1>;
-//   return <ComponentToRender />;
-// }
+      <MobileNav toggleNavStateClass={handleMobileNavStateClass.bind(null, wrapperRef)} />
+      <TabletNav />
+    </NavBarWrapper>
+  );
+}

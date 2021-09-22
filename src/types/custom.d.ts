@@ -1,5 +1,8 @@
 import { PLANET_NAMES } from '../utils/constants';
 
+import type { MotionProps } from 'framer-motion';
+import type { ElementType, ComponentPropsWithoutRef } from 'react';
+
 type BaseColors = 'black' | 'white' | 'gray';
 type PlanetAccentColors =
   | 'mercury'
@@ -54,3 +57,8 @@ export enum DeviceTypes {
 export type Devices = keyof typeof DeviceDimensions;
 export type Dimensions = keyof typeof DeviceTypes;
 export type Planets = typeof PLANET_NAMES[number];
+
+export type MotionComponentProps<Element extends ElementType<any> = 'div'> = Omit<
+  ComponentPropsWithoutRef<Element>,
+  keyof MotionProps
+>;

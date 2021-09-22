@@ -2,10 +2,49 @@
   --primaryFont: 'Antonio', 'sans-serif';
   --secondaryFont: 'Spartan', 'sans-serif';
   --borderColor: #9797974d;
+
+  --mobile: 400px;
+  --tablet: 760px;
+  --desktop: 1440px;
 }
 
 $primaryFont: var(--primaryFont);
 $secondaryFont: var(--secondaryFont);
+
+$planetImageSizes: (
+  'mercury': (
+    111px,
+    290px,
+  ),
+  'venus': (
+    154px,
+    400px,
+  ),
+  'earth': (
+    285px,
+    450px,
+  ),
+  'mars': (
+    129px,
+    336px,
+  ),
+  'jupiter': (
+    224px,
+    582px,
+  ),
+  'saturn': (
+    256px,
+    666.7px,
+  ),
+  'uranus': (
+    176px,
+    458px,
+  ),
+  'neptune': (
+    285px,
+    450px,
+  ),
+);
 
 * {
   box-sizing: border-box;
@@ -36,4 +75,24 @@ body {
 
 .active-link {
   color: change-color($color: #ffffff, $lightness: 100%, $alpha: 1);
+}
+
+.nav-text {
+  font-family: $secondaryFont;
+  font-weight: bold;
+}
+
+@each $planet, $planetSizes in $planetImageSizes {
+  $minSize: nth($planetSizes, 1);
+  $maxSize: nth($planetSizes, 2);
+
+  .#{$planet}-svg,
+  .#{$planet}-internal-svg {
+    min-height: $maxSize - 50px;
+
+    svg {
+      width: clamp(#{$minSize}, 50%, #{$maxSize});
+      height: auto;
+    }
+  }
 }

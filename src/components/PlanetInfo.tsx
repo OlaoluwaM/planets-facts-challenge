@@ -4,10 +4,12 @@ import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { usePlanet } from '../context/PlanetContext';
 import { ReactComponent as LinkIcon } from '../assets/icon-source.svg';
-import { m as motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 
 import type { infoPages } from '../utils/constants';
 import type { ReactElement } from 'react';
+import DynamicSVGComponent from './DyamicSvg';
+import { extractResourceNameOnly } from 'utils/helpers';
 
 type InfoPageTypes = typeof infoPages[number];
 type PlanetInfoTopLevelProperties = 'overview' | 'structure' | 'geology';
@@ -22,6 +24,18 @@ const PlanetInfoWrapper = styled(motion.div).attrs({
     line-height: 22px;
     letter-spacing: 0px;
     font-weight: 400;
+  }
+
+  div[class*='internal'],
+  img[class*='geology'] {
+    @media only screen and (max-width: 768px), (max-height: 768px) {
+      display: none;
+    }
+  }
+
+  & > div {
+    display: flex;
+    justify-content: center;
   }
 
   span {
@@ -63,13 +77,46 @@ export default function PlanetInfo(): ReactElement {
     infoType
   ] as PlanetInfoTopLevelProperties;
 
-  const planetInfo = planetInfoObj?.[resolvedPlanetInfoProperty].content;
-  const sourceLink = planetInfoObj?.[resolvedPlanetInfoProperty].source;
+  const planetContent = planetInfoObj[resolvedPlanetInfoProperty];
+  const planetInfo = planetContent.content;
+  const sourceLink = planetContent.source;
+  const planetImages = planetInfoObj.images;
+
+  const internalImage = extractResourceNameOnly(planetImages.internal);
+  const planetImage = extractResourceNameOnly(planetImages.planet);
+  const geologyResourceName = extractResourceNameOnly(planetImages.geology);
+
+  const geologyImagePath = require(`../assets/${geologyResourceName}.png`).default;
 
   return (
     <PlanetInfoWrapper layout>
-      {/* For the planet images check out for dynamic SVG react components
-      https://stackoverflow.com/questions/61339259/how-to-dynamically-import-svg-and-render-it-inline/61472427 */}
+      <DynamicSVGComponent
+        // layoutId='dynamic-svg'
+        className={`${planetName}-svg`}
+        name={planetImage}
+      />
+
+      {/* <AnimateSharedLayout> */}
+      {/* <AnimatePresence>
+          {infoType === 'structure' && (
+            <DynamicSVGComponent
+              layoutId='dynamic-svg'
+              className={`${planetName}-internal-svg`}
+              name={internalImage}
+            />
+          )}
+
+          {infoType === 'surface' && (
+            <motion.img
+              layoutId='dynamic-svg'
+              className={`${planetName}-geology-image`}
+              src={geologyImagePath}
+              alt={`${planetName} geology`}
+            />
+          )}
+        </AnimatePresence> */}
+      {/* </AnimateSharedLayout> */}
+
       <PlanetHeader>{planetName.toLocaleUpperCase()}</PlanetHeader>
       <motion.p
         initial={{ opacity: 0.5 }}

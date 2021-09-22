@@ -1,11 +1,11 @@
 import planetChoiceMachine from '../.machines/globalPlanetChoice.machine';
 
 import { useMachine } from '@xstate/react';
+import { PLANET_STATE_SESSION_STORAGE_KEY } from './build/utils/constants';
 import { createContext, useContext, useEffect, useMemo } from 'react';
 
 import type { ReactElement } from 'react';
 import type { StateFrom, EventFrom, EventData } from 'xstate';
-import { PLANET_STATE_SESSION_STORAGE_KEY } from './build/utils/constants';
 
 interface ContextInterface {
   state: StateFrom<typeof planetChoiceMachine>;

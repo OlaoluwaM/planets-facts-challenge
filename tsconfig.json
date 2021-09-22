@@ -3,11 +3,15 @@
     "incremental": true,
     "target": "ES2020",
     "module": "ESNEXT",
-    "lib": ["DOM", "ESNext", "DOM.Iterable"],
+    "lib": [
+      "DOM",
+      "ESNext",
+      "DOM.Iterable"
+    ],
     "jsx": "react-jsx",
     "sourceMap": true,
+    "baseUrl": "src",
     "outDir": "build",
-    "rootDir": "./",
     "isolatedModules": true,
     "strict": true,
     "moduleResolution": "node",
@@ -20,6 +24,10 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

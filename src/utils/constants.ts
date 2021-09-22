@@ -20,3 +20,9 @@ export const lowercasePlanetNamesPartialRegex = PLANET_NAMES.map(planet =>
 export const infoPages = ['overview', 'structure', 'surface'] as const;
 
 export const PLANET_STATE_SESSION_STORAGE_KEY = 'currentPlanetState';
+
+export enum DeviceDimensions {
+  Mobile = '400px',
+  Tablet = '768px',
+  Desktop = '1440px',
+}

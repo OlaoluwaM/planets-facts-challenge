@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { usePlanet } from '../context/PlanetContext';
-import { m as motion } from 'framer-motion';
+import { ActiveUnderline } from 'reusables/components/ActiveUnderline';
 import { NavLink, useLocation, useRouteMatch } from 'react-router-dom';
 
 import type { ReactElement } from 'react';
@@ -65,17 +65,5 @@ export default function DataPicker(): ReactElement {
         {isSurface && <ActiveUnderline planetName={planetName} />}
       </DataItem>
     </DataPickerWrapper>
-  );
-}
-
-function ActiveUnderline({ planetName }: { planetName: string }): ReactElement {
-  return (
-    <motion.span
-      layoutId='nav-underline'
-      initial={false}
-      animate={{ y: 0 }}
-      transition={{ type: 'spring', bounce: 0.3, delay: 0.3 }}
-      className={`h-2 min-w-20 block mt-4 inset-x-0 bg-${planetName} absolute`}
-    />
   );
 }

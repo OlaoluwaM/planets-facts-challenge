@@ -9,11 +9,12 @@ import { useMachine } from '@xstate/react';
 import { Link, useLocation } from 'react-router-dom';
 import { getLastPathSegment } from 'utils/helpers';
 import { mediaQueries, PLANET_NAMES } from '../utils/constants';
-import { AnimatePresence, m as motion } from 'framer-motion';
+import { AnimatePresence, AnimateSharedLayout, m as motion } from 'framer-motion';
 
 import type { Planets } from '../types/custom';
 import type { Variants } from 'framer-motion';
 import type { MutableRefObject, ReactElement } from 'react';
+import { ActiveUnderline } from 'reusables/components/ActiveUnderline';
 
 const NavBarWrapper = styled.nav`
   &.open + main {
@@ -25,14 +26,12 @@ const NavBarWrapper = styled.nav`
   }
 
   ${mediaQueries.tablet} {
+    flex-direction: column;
+    padding-bottom: 0.75rem;
+
     & > h5 {
       margin-top: 0.875rem;
       font-size: 1.75rem;
-    }
-
-    & {
-      flex-direction: column;
-      padding-bottom: 0.75rem;
     }
 
     & .mobile-nav-burger {
@@ -48,6 +47,41 @@ const NavBarWrapper = styled.nav`
         text-align: left;
         transition: 'text-decoration' 0.3s ease;
       }
+
+      .active-underline {
+        display: none;
+      }
+    }
+  }
+
+  ${mediaQueries.desktop} {
+    flex-direction: row;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+
+    h5,
+    .normal-nav {
+      margin-top: 0.875rem;
+      margin-bottom: 0.875rem;
+    }
+
+    h5 {
+      flex-basis: 10%;
+    }
+
+    .normal-nav {
+      overflow: initial;
+      flex-basis: 45%;
+      padding-left: 0;
+      padding-right: 0;
+
+      a {
+        overflow: hidden;
+      }
+      .active-underline {
+        display: block;
+        margin-top: -4.2rem;
+      }
     }
   }
 `;
@@ -58,26 +92,17 @@ const navItemVariants: Variants = {
     y: 20,
   },
 
-  visible: custom => ({
-    opacity: 0.7,
+  visible: ([index, isActive]) => ({
+    opacity: isActive ? 1 : 0.7,
     y: 0,
-    textDecorationThickness: '0px',
 
     transition: {
-      default: { delay: custom * 0.2 },
+      default: { delay: index * 0.2 },
       opacity: {
         delay: 0.3,
       },
     },
   }),
-
-  active: {
-    y: 0,
-    opacity: 1,
-    textDecorationStyle: 'solid',
-    textDecorationThickness: '4px',
-    textDecorationLine: 'underline',
-  },
 };
 
 function selectPlanetToDisplay(
@@ -89,7 +114,7 @@ function selectPlanetToDisplay(
   callback?.();
 }
 
-function TabletNav() {
+function OtherDimensionsNav() {
   const { pathname } = useLocation();
   console.log(pathname);
   const { sendEvent } = usePlanet();
@@ -106,21 +131,35 @@ function TabletNav() {
 
   return (
     <ul className='m-0 mt-6 mb-3 p-4 w-full px-20 flex justify-around items-center normal-nav overflow-hidden'>
-      {PLANET_NAMES.map((planetName, index) => (
-        <motion.li
-          key={planetName}
-          variants={navItemVariants}
-          initial='hidden'
-          animate={checkPlanetInPath(planetName) ? 'active' : 'visible'}
-          custom={index}
-          whileHover='active'
-          className='text-2xs nav-text'
-          onClick={() => handlePlanetChange(planetName)}>
-          <Link to={`/${planetName.toLocaleLowerCase()}/${getLastPathSegment(pathname)}`}>
-            {planetName}
-          </Link>
-        </motion.li>
-      ))}
+      <AnimateSharedLayout>
+        {PLANET_NAMES.map((planetName, index) => {
+          const isActive = checkPlanetInPath(planetName);
+
+          return (
+            <motion.li
+              key={planetName}
+              variants={navItemVariants}
+              initial='hidden'
+              animate='visible'
+              custom={[index, isActive]}
+              whileHover='active'
+              className='text-2xs nav-text relative'
+              onClick={() => handlePlanetChange(planetName)}>
+              <Link
+                to={`/${planetName.toLocaleLowerCase()}/${getLastPathSegment(pathname)}`}>
+                {planetName}
+              </Link>
+
+              {isActive && (
+                <ActiveUnderline
+                  planetName={planetName.toLocaleLowerCase()}
+                  className='active-underline'
+                />
+              )}
+            </motion.li>
+          );
+        })}
+      </AnimateSharedLayout>
     </ul>
   );
 }
@@ -172,7 +211,7 @@ function handleMobileNavStateClass({ current }: MutableRefObject<HTMLElement | n
   navElement.classList.toggle('open');
 }
 
-const navWrapperClassNames = `w-full min-h-40 flex px-5 py-6 flex items-center justify-between relative generic-border-bottom`;
+const navWrapperClassNames = `w-full min-h-40 flex px-5 py-6 items-center justify-between relative generic-border-bottom`;
 
 export default function Nav(): ReactElement {
   const wrapperRef = useRef<HTMLElement>(null);
@@ -182,7 +221,7 @@ export default function Nav(): ReactElement {
       <h5 className='uppercase font-primary text-3xl'>the Planets</h5>
 
       <MobileNav toggleNavStateClass={handleMobileNavStateClass.bind(null, wrapperRef)} />
-      <TabletNav />
+      <OtherDimensionsNav />
     </NavBarWrapper>
   );
 }

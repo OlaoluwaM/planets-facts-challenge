@@ -5,9 +5,11 @@ export const themeObj: ThemeInterface = {
   white: { DEFAULT: '#fff' },
 
   gray: {
+    100: '#D8D8D8',
     200: '#38384F',
     DEFAULT: '#979797',
     700: '#838391',
+    900: '#9797974d',
   },
 
   // These are accent colors

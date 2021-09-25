@@ -60,3 +60,9 @@ export function extractResourceNameOnly(resourcePath: string): string {
 
   return resourcePath.slice(indexOfLastSlash + 1, indexOfDot);
 }
+
+export function removeLastPartOfUrl(url: string): string {
+  const indexOfLastSlash = url.lastIndexOf('/');
+
+  return url.slice(0, indexOfLastSlash);
+}

@@ -21,7 +21,7 @@ const PlanetInfoWrapper = styled(motion.div)`
   font-family: var(--secondaryFont);
 
   p {
-    min-height: 130px;
+    min-height: 8.125rem;
     display: flex;
     flex-direction: column;
     line-height: 22px;

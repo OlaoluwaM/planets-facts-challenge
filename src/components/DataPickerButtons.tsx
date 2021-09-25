@@ -6,11 +6,14 @@ import { m as motion } from 'framer-motion';
 import { useRouteMatch, useLocation } from 'react-router';
 
 import type { ReactElement } from 'react';
+import { removeLastPartOfUrl } from 'utils/helpers';
 
 const MenuButtonWrapper = styled(motion.ul)`
   list-style: none;
 
   & li {
+    transition: border 0.4s ease;
+
     :first-of-type {
       margin-top: 0;
     }
@@ -44,7 +47,7 @@ const MenuButtonWrapper = styled(motion.ul)`
 `;
 
 export default function DataPickerButtons({
-  otherClassNames = '',
+  otherClassNames = ' ',
 }: {
   otherClassNames?: string;
 }): ReactElement {
@@ -70,14 +73,23 @@ export default function DataPickerButtons({
 
   type ButtonTypes = keyof typeof navItemResolver;
 
+  const wrapperClassNames =
+    `hidden m-0 p-0 md:flex flex-col items-center justify-center info-buttons-wrapper ${otherClassNames}`
+      .replace('undefined', ' ')
+      .trimEnd();
+
+  const buttonClass =
+    'w-full my-2.5 p-3 text-left pl-4 hover:bg-gray-900 hover:border-transparent';
+
   return (
-    <MenuButtonWrapper
-      className={`hidden m-0 p-0 md:flex flex-col items-center justify-center info-buttons-wrapper ${otherClassNames}`}>
+    <MenuButtonWrapper className={wrapperClassNames}>
       {Object.keys(navItemResolver).map((key: ButtonTypes | string, ind) => (
         <motion.li
           key={key}
-          className={`w-full my-2.5 p-3 text-left pl-4 ${addActiveStyleWhenNeeded(key)}`}>
-          <NavLink data-position={'0' + (ind + 1)} to={`${url}/${key}`}>
+          className={buttonClass.concat(` ${addActiveStyleWhenNeeded(key)}`)}>
+          <NavLink
+            data-position={'0' + (ind + 1)}
+            to={`${removeLastPartOfUrl(url)}/${key}`}>
             {navItemResolver[key as keyof typeof navItemResolver]}
           </NavLink>
         </motion.li>

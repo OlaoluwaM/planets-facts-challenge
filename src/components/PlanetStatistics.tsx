@@ -8,7 +8,7 @@ import { mediaQueries } from 'context/build/utils/constants';
 import type { ReactElement } from 'react';
 
 const PlanetStatistic = styled(motion.li)`
-  min-height: 70px;
+  min-height: 4.375rem;
   border: 0.5px solid var(--borderColor);
 
   :last-of-type {

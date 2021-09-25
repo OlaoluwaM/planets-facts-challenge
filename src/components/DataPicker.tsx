@@ -26,10 +26,6 @@ const DataItem = styled.li.attrs({
     text-decoration: none;
     transition: color 0.3s ease;
   }
-
-  span {
-    /* top: 223%; */
-  }
 `;
 
 export default function DataPicker(): ReactElement {
@@ -39,7 +35,6 @@ export default function DataPicker(): ReactElement {
   const { state: planetStateNode } = usePlanet();
   const planetName = planetStateNode.value as string;
 
-  console.log({ pathname });
   const isOverview = pathname.endsWith('overview');
   const isStructure = pathname.endsWith('structure');
   const isSurface = pathname.endsWith('surface');

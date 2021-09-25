@@ -26,3 +26,7 @@ export enum DeviceDimensions {
   Tablet = '768px',
   Desktop = '1440px',
 }
+
+export const mediaQueries = {
+  tablet: `@media only screen and (min-width: ${DeviceDimensions.Tablet}) `,
+};

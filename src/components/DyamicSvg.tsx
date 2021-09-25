@@ -21,7 +21,6 @@ export default function DynamicSVGComponent({
 
   const { className = '', ...restOfRest } = rest;
 
-  console.log({ className });
   const [_, sendEvent] = useMachine(genericAsyncProcessMachine, {
     actions: {
       onCompleted: () => console.log('Success!'),

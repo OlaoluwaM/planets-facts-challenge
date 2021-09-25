@@ -8,7 +8,7 @@ import type { ReactElement } from 'react';
 
 const DataPickerWrapper = styled.ul.attrs({
   className:
-    'w-full h-auto py-5 px-2.5 list-none m-0 uppercase flex items-center justify-around text-3xs generic-border-bottom',
+    'w-full h-auto py-5 px-2.5 list-none m-0 uppercase flex items-center justify-around text-3xs generic-border-bottom data-picker',
 })`
   font-family: var(--secondaryFont);
   font-weight: bold;
@@ -28,8 +28,7 @@ const DataItem = styled.li.attrs({
   }
 
   span {
-    top: 223%;
-    width: 107%;
+    /* top: 223%; */
   }
 `;
 
@@ -40,9 +39,10 @@ export default function DataPicker(): ReactElement {
   const { state: planetStateNode } = usePlanet();
   const planetName = planetStateNode.value as string;
 
-  const isOverview = pathname.includes('overview');
-  const isStructure = pathname.includes('structure');
-  const isSurface = pathname.includes('surface');
+  console.log({ pathname });
+  const isOverview = pathname.endsWith('overview');
+  const isStructure = pathname.endsWith('structure');
+  const isSurface = pathname.endsWith('surface');
 
   return (
     <DataPickerWrapper>
@@ -79,8 +79,8 @@ function ActiveUnderline({ planetName }: { planetName: string }): ReactElement {
       layoutId='nav-underline'
       initial={false}
       animate={{ y: 0 }}
-      transition={{ type: 'spring', bounce: 0.5, delay: 0.3 }}
-      className={`h-2 inset-x-0 bg-${planetName} absolute`}
+      transition={{ type: 'spring', bounce: 0.3, delay: 0.3 }}
+      className={`h-2 min-w-20 block mt-4 inset-x-0 bg-${planetName} absolute`}
     />
   );
 }

@@ -1,26 +1,29 @@
 import Color from 'color';
 import styled from 'styled-components';
+import DataPickerButtons from './DataPickerButtons';
+import DynamicSVGComponent from './DyamicSvg';
 
 import { useParams } from 'react-router';
 import { usePlanet } from '../context/PlanetContext';
+import { m as motion } from 'framer-motion';
 import { ReactComponent as LinkIcon } from '../assets/icon-source.svg';
-import { m as motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
+
+import { extractResourceNameOnly } from 'utils/helpers';
 
 import type { infoPages } from '../utils/constants';
 import type { ReactElement } from 'react';
-import DynamicSVGComponent from './DyamicSvg';
-import { extractResourceNameOnly } from 'utils/helpers';
+import { mediaQueries } from 'context/build/utils/constants';
 
 type InfoPageTypes = typeof infoPages[number];
 type PlanetInfoTopLevelProperties = 'overview' | 'structure' | 'geology';
 
-const PlanetInfoWrapper = styled(motion.div).attrs({
-  className: 'px-3 w-full text-center text-2xs text-white mb-6',
-})`
+const PlanetInfoWrapper = styled(motion.div)`
   font-family: var(--secondaryFont);
 
   p {
     min-height: 130px;
+    display: flex;
+    flex-direction: column;
     line-height: 22px;
     letter-spacing: 0px;
     font-weight: 400;
@@ -33,7 +36,11 @@ const PlanetInfoWrapper = styled(motion.div).attrs({
     }
   }
 
-  & > div {
+  /* & .info-buttons-wrapper {
+    display: none;
+  } */
+
+  & > div:first-of-type {
     display: flex;
     justify-content: center;
   }
@@ -50,11 +57,20 @@ const PlanetInfoWrapper = styled(motion.div).attrs({
         Color(theme.white.DEFAULT).hsl().lightness(50).alpha(0.5).toString()};
     }
   }
+
+  ${mediaQueries.tablet} {
+    & article {
+      flex-basis: 50%;
+      text-align: left;
+    }
+
+    & .info-buttons-wrapper {
+      flex-basis: 45%;
+    }
+  }
 `;
 
-const PlanetHeader = styled(motion.h2).attrs({
-  className: 'text-custom4xl my-4 mb-6',
-})`
+const PlanetHeader = styled(motion.h2)`
   letter-spacing: 0px;
   line-height: 100%;
   font-family: var(--primaryFont);
@@ -89,7 +105,9 @@ export default function PlanetInfo(): ReactElement {
   const geologyImagePath = require(`../assets/${geologyResourceName}.png`).default;
 
   return (
-    <PlanetInfoWrapper layout>
+    <PlanetInfoWrapper
+      layout
+      className='px-3 w-full text-center text-2xs text-white mb-6'>
       <DynamicSVGComponent
         // layoutId='dynamic-svg'
         className={`${planetName}-svg`}
@@ -117,21 +135,31 @@ export default function PlanetInfo(): ReactElement {
         </AnimatePresence> */}
       {/* </AnimateSharedLayout> */}
 
-      <PlanetHeader>{planetName.toLocaleUpperCase()}</PlanetHeader>
-      <motion.p
-        initial={{ opacity: 0.5 }}
-        animate={{ opacity: 1 }}
-        key={planetInfo}
-        className='mb-5 px-2'>
-        {planetInfo}
-      </motion.p>
-      <span>
-        Source:{' '}
-        <a className='text-white' href={sourceLink}>
-          Wikipedia
-          <LinkIcon className='inline ml-1' />
-        </a>
-      </span>
+      <div className='md:flex md:justify-between md:px-6 md:mt-32 md:mb-14'>
+        <article className='flex flex-col md:pr-6'>
+          <PlanetHeader className='text-custom4xl my-4'>
+            {planetName.toLocaleUpperCase()}
+          </PlanetHeader>
+
+          <motion.p
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: 1 }}
+            key={planetInfo}
+            className='my-6'>
+            {planetInfo}
+
+            <span className='mt-6 md:mt-12'>
+              Source:
+              <a className='text-white' href={sourceLink}>
+                Wikipedia
+                <LinkIcon className='inline ml-1' />
+              </a>
+            </span>
+          </motion.p>
+        </article>
+
+        <DataPickerButtons />
+      </div>
     </PlanetInfoWrapper>
   );
 }

@@ -127,15 +127,3 @@ export default function MobileNavMenu({ setPlanet }: MobileNavMenuProps): ReactE
     </NavMenu>
   );
 }
-
-// export function MobileNavMenu(): ReactElement {
-//   return <>        <IconBurger
-//           menuOpen={showMenu}
-//           className='cursor-pointer'
-//           onClick={handleClick}
-//         />
-//       </div>
-//       <AnimatePresence>
-//         {showMenu && <MobileNavMenu setPlanet={selectPlanetToDisplay} />}
-//       </AnimatePresence></>
-// }

@@ -6,10 +6,16 @@ import PlanetStatistics from '../components/PlanetStatistics';
 import { Route, useRouteMatch } from 'react-router-dom';
 
 import type { ReactElement } from 'react';
-import { infoPages } from '../utils/constants';
+import { infoPages, mediaQueries } from '../utils/constants';
 
 const ContentWrapper = styled.main`
   min-height: calc(calc(100% - 10rem) / 2);
+
+  ${mediaQueries.tablet} {
+    & > .data-picker {
+      display: none;
+    }
+  }
 `;
 
 export default function GenericPlanetPage(): ReactElement {

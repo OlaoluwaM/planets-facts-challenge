@@ -1,19 +1,13 @@
 import styled from 'styled-components';
+import Counter from './Counter';
 
 import { usePlanet } from '../context/PlanetContext';
 import { m as motion } from 'framer-motion';
+import { mediaQueries } from 'context/build/utils/constants';
 
 import type { ReactElement } from 'react';
-import Counter from './Counter';
 
-const PlanetStatisticsWrapper = styled(motion.ul).attrs({
-  className: 'px-3 py-0 m-0 pb-3',
-})``;
-
-const PlanetStatistic = styled(motion.li).attrs({
-  className:
-    'p-6 px-8 w-full font-secondary text-4xs font-bold inactive-text mb-3 flex items-center justify-between',
-})`
+const PlanetStatistic = styled(motion.li)`
   min-height: 70px;
   border: 0.5px solid var(--borderColor);
 
@@ -23,6 +17,31 @@ const PlanetStatistic = styled(motion.li).attrs({
 
   span {
     font-weight: 500;
+  }
+`;
+
+const PlanetStatisticsWrapper = styled(motion.ul)`
+  ${mediaQueries.tablet} {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    & ${PlanetStatistic} {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      align-items: flex-start;
+      width: 23.5%;
+      padding: 1rem;
+
+      :last-of-type {
+        margin-bottom: auto;
+      }
+
+      & span {
+        margin-top: 0.6rem;
+      }
+    }
   }
 `;
 
@@ -41,7 +60,7 @@ export default function PlanetStatistics(): ReactElement {
   } = usePlanet();
 
   return (
-    <PlanetStatisticsWrapper layout>
+    <PlanetStatisticsWrapper layout className='px-3 py-0 m-0 pb-3'>
       {statistics.map(([metricName, metricKey]) => {
         const metric = planetInfo?.[metricKey];
         if (!metric) throw new Error(`Metric ${metricKey} was undefined`);
@@ -50,7 +69,9 @@ export default function PlanetStatistics(): ReactElement {
         const suffix = metric?.match(/[a-z]/gi)?.join('') ?? '';
 
         return (
-          <PlanetStatistic key={metricName}>
+          <PlanetStatistic
+            key={metricName}
+            className='p-6 px-8 w-full font-secondary text-4xs font-bold inactive-text mb-3 flex items-center justify-between'>
             {metricName.toLocaleUpperCase()}
             <Counter
               from={number / 2}

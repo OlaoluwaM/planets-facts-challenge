@@ -3,16 +3,17 @@ import IconBurger from './NavBurgerIcon';
 import MobileNavMenu from './MobileNavMenu';
 import mobileNavToggleMachine from '../.machines/mobleNav.machine';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePlanet } from '../context/PlanetContext';
 import { useMachine } from '@xstate/react';
-import { AnimatePresence, m as motion } from 'framer-motion';
-import { DeviceDimensions, PLANET_NAMES } from '../utils/constants';
-
-import type { Planets } from '../types/custom';
-import type { MutableRefObject, ReactElement } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getLastPathSegment } from 'utils/helpers';
+import { mediaQueries, PLANET_NAMES } from '../utils/constants';
+import { AnimatePresence, m as motion } from 'framer-motion';
+
+import type { Planets } from '../types/custom';
+import type { Variants } from 'framer-motion';
+import type { MutableRefObject, ReactElement } from 'react';
 
 const NavBarWrapper = styled.nav`
   &.open + main {
@@ -23,8 +24,7 @@ const NavBarWrapper = styled.nav`
     display: none;
   }
 
-  @media only screen and (min-width: ${DeviceDimensions.Tablet}),
-    (max-height: ${DeviceDimensions.Tablet}) {
+  ${mediaQueries.tablet} {
     & > h5 {
       margin-top: 0.875rem;
       font-size: 1.75rem;
@@ -45,11 +45,40 @@ const NavBarWrapper = styled.nav`
 
       li {
         display: inline-block;
-        opacity: 0.5;
+        text-align: left;
+        transition: 'text-decoration' 0.3s ease;
       }
     }
   }
 `;
+
+const navItemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+
+  visible: custom => ({
+    opacity: 0.7,
+    y: 0,
+    textDecorationThickness: '0px',
+
+    transition: {
+      default: { delay: custom * 0.2 },
+      opacity: {
+        delay: 0.3,
+      },
+    },
+  }),
+
+  active: {
+    y: 0,
+    opacity: 1,
+    textDecorationStyle: 'solid',
+    textDecorationThickness: '4px',
+    textDecorationLine: 'underline',
+  },
+};
 
 function selectPlanetToDisplay(
   planetName: Planets,
@@ -62,17 +91,29 @@ function selectPlanetToDisplay(
 
 function TabletNav() {
   const { pathname } = useLocation();
+  console.log(pathname);
   const { sendEvent } = usePlanet();
 
   const handlePlanetChange = (planetName: Planets) => {
     selectPlanetToDisplay(planetName, sendEvent);
   };
 
+  const checkPlanetInPath = (planetName: Planets): boolean => {
+    const regex = new RegExp(planetName, 'i');
+
+    return pathname.search(regex) > -1;
+  };
+
   return (
-    <ul className='m-0 mt-6 mb-3 p-4 w-full px-5 flex justify-around items-center normal-nav'>
-      {PLANET_NAMES.map(planetName => (
+    <ul className='m-0 mt-6 mb-3 p-4 w-full px-20 flex justify-around items-center normal-nav overflow-hidden'>
+      {PLANET_NAMES.map((planetName, index) => (
         <motion.li
           key={planetName}
+          variants={navItemVariants}
+          initial='hidden'
+          animate={checkPlanetInPath(planetName) ? 'active' : 'visible'}
+          custom={index}
+          whileHover='active'
           className='text-2xs nav-text'
           onClick={() => handlePlanetChange(planetName)}>
           <Link to={`/${planetName.toLocaleLowerCase()}/${getLastPathSegment(pathname)}`}>
@@ -88,9 +129,14 @@ interface MobileNavPropInterface {
 }
 
 function MobileNav({ toggleNavStateClass }: MobileNavPropInterface): ReactElement {
-  // Subscribe to the service so when the `CLOSE_MENU` event is emitted we toggle the `open` class
   const [state, send, service] = useMachine(mobileNavToggleMachine);
   const showMenu = state.matches('open');
+
+  useEffect(() => {
+    service.subscribe(state => {
+      if (['OPEN_MENU', 'CLOSE_MENU'].includes(state.event.type)) toggleNavStateClass();
+    });
+  }, []);
 
   const { sendEvent } = usePlanet();
 
@@ -99,13 +145,11 @@ function MobileNav({ toggleNavStateClass }: MobileNavPropInterface): ReactElemen
       ? 'CLOSE_MENU'
       : 'OPEN_MENU';
 
-    toggleNavStateClass();
     send({ type: eventToSend });
   };
 
   const handlePlanetChange = (planet: Planets) => {
     selectPlanetToDisplay(planet, sendEvent, () => send({ type: 'CLOSE_MENU' }));
-    toggleNavStateClass();
   };
 
   return (

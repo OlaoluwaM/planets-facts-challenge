@@ -7,12 +7,12 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     screens: {
-      mobile: '360px',
-      sm: '640px',
-      tablet: '768px',
-      lg: '1024px',
-      xl: '1280px',
-      desktop: '1440px',
+      sm: '400px',
+      // sm: '640px',
+      md: '768px',
+      // lg: '1024px',
+      // xl: '1280px',
+      lg: '1440px',
       '2xl': '1536px',
     },
     colors: {
@@ -247,7 +247,7 @@ module.exports = {
     },
     fontSize: {
       '4xs': ['8px', { letterHeight: '16px', letterSpacing: '0.73px' }],
-      '3xs': ['9px', { letterSpacing: '1.93px' }],
+      '3xs': ['9px', { lineHeight: '25px', letterSpacing: '1.93px' }],
       '2xs': ['0.688rem', { lineHeight: '25px', letterSpacing: '1px' }],
       xs: ['0.75rem', { lineHeight: '25px', letterSpacing: '2.6px' }],
       sm: ['0.875rem', { lineHeight: '1.25rem' }],

@@ -85,7 +85,7 @@ export default function PlanetStatistics(): ReactElement {
             <Counter
               from={number / 2}
               to={number}
-              suffix={number === 1 ? suffix : suffix.replace(/s$/, '')}
+              suffix={number > 1 ? suffix : suffix.replace(/s$/, '')}
               decimalPlace={Number.isInteger(number) ? 0 : 1}
               className='text-xl font-primary text-white lg:text-3xl'
             />

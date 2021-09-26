@@ -120,7 +120,7 @@ function PlanetSvgs({
     'relative my-6 md:mt-14 md:mb-4 lg:flex-grow flex items-center justify-center';
   const commonClassesForSvgs = 'w-full h-full lg:absolute overflow-hidden';
 
-  const isDesktop = window.matchMedia(`(min-width: ${DeviceDimensions.Tablet})`).matches;
+  const isDesktop = window.matchMedia(`(min-width: ${DeviceDimensions.Desktop})`).matches;
 
   if (!isDesktop) {
     return (

@@ -26,12 +26,13 @@ const PlanetStatisticsWrapper = styled(motion.ul)`
     justify-content: space-around;
     align-items: center;
 
-    & ${PlanetStatistic} {
+    ${PlanetStatistic} {
       display: flex;
       flex-direction: column;
       text-align: left;
       align-items: flex-start;
       width: 23.5%;
+      flex-basis: 23.5%;
       padding: 1rem;
 
       :last-of-type {
@@ -40,6 +41,14 @@ const PlanetStatisticsWrapper = styled(motion.ul)`
 
       & span {
         margin-top: 0.6rem;
+      }
+    }
+  }
+
+  ${mediaQueries.desktop} {
+    ${PlanetStatistic} {
+      span {
+        letter-spacing: -0.9px;
       }
     }
   }
@@ -71,14 +80,14 @@ export default function PlanetStatistics(): ReactElement {
         return (
           <PlanetStatistic
             key={metricName}
-            className='p-6 px-8 w-full font-secondary text-4xs font-bold inactive-text mb-3 flex items-center justify-between'>
+            className='p-6 px-8 w-full font-secondary text-4xs font-bold inactive-text mb-3 flex items-center justify-between lg:p-10'>
             {metricName.toLocaleUpperCase()}
             <Counter
               from={number / 2}
               to={number}
-              suffix={suffix}
+              suffix={number === 1 ? suffix : suffix.replace(/s$/, '')}
               decimalPlace={Number.isInteger(number) ? 0 : 1}
-              className='text-xl font-primary text-white'
+              className='text-xl font-primary text-white lg:text-3xl'
             />
           </PlanetStatistic>
         );

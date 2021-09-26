@@ -47,7 +47,7 @@ export default function DynamicSVGComponent({
   const SvgIcon = ImportedIconRef.current;
 
   return (
-    <motion.div className={'my-16 planet-svg-wrapper '.concat(className)} {...restOfRest}>
+    <motion.div className={'planet-svg-wrapper '.concat(className)} {...restOfRest}>
       {SvgIcon ? <SvgIcon /> : <svg></svg>}
     </motion.div>
   );

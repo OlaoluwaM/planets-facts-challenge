@@ -1,9 +1,10 @@
 import { debounce } from '../utils/helpers';
 
 import { createModel } from 'xstate/lib/model';
-import { Devices, Dimensions, DeviceDimensions } from '../types/custom.d';
+import { DeviceDimensions } from 'utils/constants';
 
 import type { Sender } from 'xstate';
+import type { Devices, Dimensions } from '../types/custom.d';
 
 function determineDeviceType(): Devices {
   const { innerWidth } = window;

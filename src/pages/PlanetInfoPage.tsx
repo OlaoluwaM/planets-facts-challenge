@@ -22,7 +22,7 @@ export default function GenericPlanetPage(): ReactElement {
   const { path } = useRouteMatch();
 
   return (
-    <ContentWrapper>
+    <ContentWrapper className='lg:px-40'>
       <DataPicker />
       <Route exact path={`${path}/:infoType(${infoPages.join('|')})`}>
         <PlanetInfo />

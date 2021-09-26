@@ -5,14 +5,12 @@ import DynamicSVGComponent from './DyamicSvg';
 
 import { useParams } from 'react-router';
 import { usePlanet } from '../context/PlanetContext';
-import { m as motion } from 'framer-motion';
-import { ReactComponent as LinkIcon } from '../assets/icon-source.svg';
-
 import { extractResourceNameOnly } from 'utils/helpers';
+import { ReactComponent as LinkIcon } from '../assets/icon-source.svg';
+import { AnimatePresence, m as motion } from 'framer-motion';
 
-import type { infoPages } from '../utils/constants';
+import { DeviceDimensions, infoPages, mediaQueries } from '../utils/constants';
 import type { ReactElement } from 'react';
-import { mediaQueries } from 'context/build/utils/constants';
 
 type InfoPageTypes = typeof infoPages[number];
 type PlanetInfoTopLevelProperties = 'overview' | 'structure' | 'geology';
@@ -21,7 +19,7 @@ const PlanetInfoWrapper = styled(motion.div)`
   font-family: var(--secondaryFont);
 
   p {
-    min-height: 8.125rem;
+    min-height: 10.125rem;
     display: flex;
     flex-direction: column;
     line-height: 22px;
@@ -31,14 +29,8 @@ const PlanetInfoWrapper = styled(motion.div)`
 
   div[class*='internal'],
   img[class*='geology'] {
-    @media only screen and (max-width: 768px), (max-height: 768px) {
-      display: none;
-    }
-  }
-
-  /* & .info-buttons-wrapper {
     display: none;
-  } */
+  }
 
   & > div:first-of-type {
     display: flex;
@@ -58,6 +50,12 @@ const PlanetInfoWrapper = styled(motion.div)`
     }
   }
 
+  aside div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   ${mediaQueries.tablet} {
     & article {
       flex-basis: 50%;
@@ -68,13 +66,115 @@ const PlanetInfoWrapper = styled(motion.div)`
       flex-basis: 45%;
     }
   }
+
+  ${mediaQueries.desktop} {
+    div[class*='internal'],
+    img[class*='geology'] {
+      display: flex;
+      line-height: 0px;
+    }
+
+    & > div {
+      flex-basis: 30%;
+    }
+
+    img[class*='geology'] {
+      max-width: 20%;
+      height: auto;
+    }
+  }
 `;
 
 const PlanetHeader = styled(motion.h2)`
   letter-spacing: 0px;
   line-height: 100%;
   font-family: var(--primaryFont);
+
+  ${mediaQueries.desktop} {
+    font-size: 5rem;
+  }
 `;
+
+interface PlanetSVGProps {
+  infoType: string;
+  planetImages: {
+    internal: string;
+    planet: string;
+    geology: string;
+  };
+  planetName: string;
+}
+
+function PlanetSvgs({
+  infoType,
+  planetImages,
+  planetName,
+}: PlanetSVGProps): ReactElement {
+  const planetImage = extractResourceNameOnly(planetImages.planet);
+  const internalImage = extractResourceNameOnly(planetImages.internal);
+  const geologyResourceName = extractResourceNameOnly(planetImages.geology);
+
+  const geologyImagePath = require(`../assets/${geologyResourceName}.png`).default;
+
+  const wrapperClasses =
+    'relative my-6 md:mt-14 md:mb-4 lg:flex-grow flex items-center justify-center';
+  const commonClassesForSvgs = 'w-full h-full lg:absolute overflow-hidden';
+
+  const isDesktop = window.matchMedia(`(min-width: ${DeviceDimensions.Tablet})`).matches;
+
+  if (!isDesktop) {
+    return (
+      <aside className={wrapperClasses}>
+        <DynamicSVGComponent
+          className={`${planetName}-svg ${commonClassesForSvgs}`}
+          name={planetImage}
+        />
+      </aside>
+    );
+  }
+
+  return (
+    <aside className={wrapperClasses}>
+      <AnimatePresence exitBeforeEnter>
+        {(infoType === 'overview' || infoType === 'surface') && (
+          <DynamicSVGComponent
+            key='item1'
+            initial={{ opacity: 0, x: -150 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0 }}
+            className={`${planetName}-svg ${commonClassesForSvgs}`}
+            name={planetImage}
+          />
+        )}
+
+        {infoType === 'structure' && (
+          <DynamicSVGComponent
+            key='item2'
+            // layoutId='dynamic-svg'
+            initial={{ opacity: 0, x: -150 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0 }}
+            className={`${planetName}-internal-svg ${commonClassesForSvgs}`}
+            name={internalImage}
+          />
+        )}
+
+        {infoType === 'surface' && (
+          <motion.img
+            key='item3'
+            className={`${planetName}-geology-image bottom-8 ${commonClassesForSvgs}`}
+            src={geologyImagePath}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.4 }}
+            alt={`${planetName} geology`}
+          />
+        )}
+      </AnimatePresence>
+    </aside>
+  );
+}
 
 export default function PlanetInfo(): ReactElement {
   const { state } = usePlanet();
@@ -94,50 +194,24 @@ export default function PlanetInfo(): ReactElement {
   ] as PlanetInfoTopLevelProperties;
 
   const planetContent = planetInfoObj[resolvedPlanetInfoProperty];
+
   const planetInfo = planetContent.content;
   const sourceLink = planetContent.source;
   const planetImages = planetInfoObj.images;
 
-  const internalImage = extractResourceNameOnly(planetImages.internal);
-  const planetImage = extractResourceNameOnly(planetImages.planet);
-  const geologyResourceName = extractResourceNameOnly(planetImages.geology);
-
-  const geologyImagePath = require(`../assets/${geologyResourceName}.png`).default;
-
   return (
     <PlanetInfoWrapper
       layout
-      className='px-3 w-full text-center text-2xs text-white mb-6'>
-      <DynamicSVGComponent
-        // layoutId='dynamic-svg'
-        className={`${planetName}-svg`}
-        name={planetImage}
+      className='px-3 w-full text-center text-2xs text-white mb-6 lg:flex'>
+      <PlanetSvgs
+        infoType={infoType}
+        planetImages={planetImages}
+        planetName={planetName}
       />
 
-      {/* <AnimateSharedLayout> */}
-      {/* <AnimatePresence>
-          {infoType === 'structure' && (
-            <DynamicSVGComponent
-              layoutId='dynamic-svg'
-              className={`${planetName}-internal-svg`}
-              name={internalImage}
-            />
-          )}
-
-          {infoType === 'surface' && (
-            <motion.img
-              layoutId='dynamic-svg'
-              className={`${planetName}-geology-image`}
-              src={geologyImagePath}
-              alt={`${planetName} geology`}
-            />
-          )}
-        </AnimatePresence> */}
-      {/* </AnimateSharedLayout> */}
-
-      <div className='md:flex md:justify-between md:px-6 md:mt-32 md:mb-14'>
+      <div className='md:flex md:justify-between md:px-6 md:mt-32 md:mb-14 lg:flex-col lg:mt-8'>
         <article className='flex flex-col md:pr-6'>
-          <PlanetHeader className='text-custom4xl my-4'>
+          <PlanetHeader className='text-custom4xl my-4 lg:mt-0 lg:'>
             {planetName.toLocaleUpperCase()}
           </PlanetHeader>
 
@@ -148,7 +222,7 @@ export default function PlanetInfo(): ReactElement {
             className='my-6'>
             {planetInfo}
 
-            <span className='mt-6 md:mt-12'>
+            <span className='mt-6 md:mt-12 lg:my-6'>
               Source:
               <a className='text-white' href={sourceLink}>
                 Wikipedia

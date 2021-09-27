@@ -3,9 +3,10 @@ import IconBurger from './NavBurgerIcon';
 import MobileNavMenu from './MobileNavMenu';
 import mobileNavToggleMachine from '../.machines/mobleNav.machine';
 
-import { useEffect, useRef } from 'react';
 import { usePlanet } from '../context/PlanetContext';
 import { useMachine } from '@xstate/react';
+import { ActiveUnderline } from 'reusables/components/ActiveUnderline';
+import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getLastPathSegment } from 'utils/helpers';
 import { mediaQueries, PLANET_NAMES } from '../utils/constants';
@@ -14,7 +15,6 @@ import { AnimatePresence, AnimateSharedLayout, m as motion } from 'framer-motion
 import type { Planets } from '../types/custom';
 import type { Variants } from 'framer-motion';
 import type { MutableRefObject, ReactElement } from 'react';
-import { ActiveUnderline } from 'reusables/components/ActiveUnderline';
 
 const NavBarWrapper = styled.nav`
   &.open + main {

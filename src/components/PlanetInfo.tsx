@@ -75,7 +75,7 @@ const PlanetInfoWrapper = styled(motion.div)`
     }
 
     & > div {
-      flex-basis: 35%;
+      flex-basis: 32%;
     }
 
     img[class*='geology'] {
@@ -216,7 +216,7 @@ export default function PlanetInfo(): ReactElement {
       />
 
       <div className='md:flex md:justify-between md:px-6 md:mt-24 md:mb-14 lg:flex-col lg:mt-12'>
-        <article className='flex flex-col md:pr-6'>
+        <article className='flex flex-col md:pr-20'>
           <PlanetHeader className='text-custom4xl my-4 lg:mt-0 lg:'>
             {planetName.toLocaleUpperCase()}
           </PlanetHeader>

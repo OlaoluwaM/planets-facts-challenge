@@ -10,7 +10,7 @@ import { ReactComponent as LinkIcon } from '../assets/icon-source.svg';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
 import { DeviceDimensions, infoPages, mediaQueries } from '../utils/constants';
-import type { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 type InfoPageTypes = typeof infoPages[number];
 type PlanetInfoTopLevelProperties = 'overview' | 'structure' | 'geology';
@@ -75,7 +75,7 @@ const PlanetInfoWrapper = styled(motion.div)`
     }
 
     & > div {
-      flex-basis: 30%;
+      flex-basis: 35%;
     }
 
     img[class*='geology'] {
@@ -110,6 +110,10 @@ function PlanetSvgs({
   planetImages,
   planetName,
 }: PlanetSVGProps): ReactElement {
+  const isDesktop = window.matchMedia(`(min-width: ${DeviceDimensions.Desktop})`).matches;
+
+  const [multipleSVGUsage, setSVGUsage] = useState<boolean>(isDesktop);
+
   const planetImage = extractResourceNameOnly(planetImages.planet);
   const internalImage = extractResourceNameOnly(planetImages.internal);
   const geologyResourceName = extractResourceNameOnly(planetImages.geology);
@@ -118,14 +122,17 @@ function PlanetSvgs({
 
   const wrapperClasses =
     'relative my-6 md:mt-14 md:mb-4 lg:flex-grow flex items-center justify-center';
+
   const commonClassesForSvgs = 'w-full h-full lg:absolute overflow-hidden';
 
-  const isDesktop = window.matchMedia(`(min-width: ${DeviceDimensions.Desktop})`).matches;
+  useEffect(() => setSVGUsage(isDesktop), [isDesktop]);
 
-  if (!isDesktop) {
+  if (!multipleSVGUsage) {
     return (
       <aside className={wrapperClasses}>
         <DynamicSVGComponent
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className={`${planetName}-svg ${commonClassesForSvgs}`}
           name={planetImage}
         />
@@ -150,7 +157,6 @@ function PlanetSvgs({
         {infoType === 'structure' && (
           <DynamicSVGComponent
             key='item2'
-            // layoutId='dynamic-svg'
             initial={{ opacity: 0, x: -150 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0 }}
@@ -209,7 +215,7 @@ export default function PlanetInfo(): ReactElement {
         planetName={planetName}
       />
 
-      <div className='md:flex md:justify-between md:px-6 md:mt-32 md:mb-14 lg:flex-col lg:mt-8'>
+      <div className='md:flex md:justify-between md:px-6 md:mt-24 md:mb-14 lg:flex-col lg:mt-12'>
         <article className='flex flex-col md:pr-6'>
           <PlanetHeader className='text-custom4xl my-4 lg:mt-0 lg:'>
             {planetName.toLocaleUpperCase()}

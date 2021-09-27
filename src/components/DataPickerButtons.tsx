@@ -11,7 +11,7 @@ import { removeLastPartOfUrl } from 'utils/helpers';
 const MenuButtonWrapper = styled(motion.ul)`
   list-style: none;
 
-  & li {
+  & a {
     transition: border 0.4s ease;
 
     :first-of-type {
@@ -29,19 +29,19 @@ const MenuButtonWrapper = styled(motion.ul)`
     border-radius: 3px;
     transition: background 0.3s ease;
 
-    a {
+    li {
       width: 100%;
       display: inline-block;
       height: 100%;
+    }
 
-      &::before {
-        content: attr(data-position) ${' '.repeat(10)};
-        opacity: 0.4;
-        font-family: inherit;
-        font-weight: inherit;
-        color: inherit;
-        margin-right: 0.875rem;
-      }
+    &::before {
+      content: attr(data-position) ${' '.repeat(10)};
+      opacity: 0.4;
+      font-family: inherit;
+      font-weight: inherit;
+      color: inherit;
+      margin-right: 0.875rem;
     }
   }
 `;
@@ -78,21 +78,20 @@ export default function DataPickerButtons({
       .replace('undefined', ' ')
       .trimEnd();
 
-  const buttonClass =
-    'w-full my-2.5 p-3 text-left pl-4 hover:bg-gray-900 hover:border-transparent';
+  const linkClass =
+    'w-full my-2.5 p-3 pl-4 text-left hover:bg-gray-900 hover:border-transparent flex';
 
   return (
     <MenuButtonWrapper className={wrapperClassNames}>
       {Object.keys(navItemResolver).map((key: ButtonTypes | string, ind) => (
-        <motion.li
+        <NavLink
           key={key}
-          className={buttonClass.concat(` ${addActiveStyleWhenNeeded(key)}`)}>
-          <NavLink
-            data-position={'0' + (ind + 1)}
-            to={`${removeLastPartOfUrl(url)}/${key}`}>
-            {navItemResolver[key as keyof typeof navItemResolver]}
-          </NavLink>
-        </motion.li>
+          data-position={'0' + (ind + 1)}
+          className={linkClass}
+          activeClassName={addActiveStyleWhenNeeded(key)}
+          to={`${removeLastPartOfUrl(url)}/${key}`}>
+          <motion.li>{navItemResolver[key as keyof typeof navItemResolver]}</motion.li>
+        </NavLink>
       ))}
     </MenuButtonWrapper>
   );

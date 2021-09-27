@@ -88,7 +88,7 @@ body {
 
   .#{$planet}-svg,
   .#{$planet}-internal-svg {
-    min-height: $maxSize;
+    min-height: $maxSize + 20px;
 
     svg {
       width: clamp(#{$minSize}, 50%, #{$maxSize});

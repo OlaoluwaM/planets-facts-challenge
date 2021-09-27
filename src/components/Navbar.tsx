@@ -75,12 +75,9 @@ const NavBarWrapper = styled.nav`
       padding-left: 0;
       padding-right: 0;
 
-      a {
-        overflow: hidden;
-      }
       .active-underline {
         display: block;
-        margin-top: -4.2rem;
+        margin-top: -4.8rem;
       }
     }
   }
@@ -89,12 +86,10 @@ const NavBarWrapper = styled.nav`
 const navItemVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 20,
   },
 
   visible: ([index, isActive]) => ({
     opacity: isActive ? 1 : 0.7,
-    y: 0,
 
     transition: {
       default: { delay: index * 0.2 },
@@ -103,6 +98,10 @@ const navItemVariants: Variants = {
       },
     },
   }),
+
+  active: {
+    opacity: 1,
+  },
 };
 
 function selectPlanetToDisplay(
@@ -130,33 +129,33 @@ function OtherDimensionsNav() {
   };
 
   return (
-    <ul className='m-0 mt-6 mb-3 p-4 w-full px-20 flex justify-around items-center normal-nav overflow-hidden'>
+    <ul className='m-0 mt-6 mb-3 p-4 w-full px-20 flex justify-around items-center normal-nav'>
       <AnimateSharedLayout>
         {PLANET_NAMES.map((planetName, index) => {
           const isActive = checkPlanetInPath(planetName);
 
           return (
-            <motion.li
+            <Link
               key={planetName}
-              variants={navItemVariants}
-              initial='hidden'
-              animate='visible'
-              custom={[index, isActive]}
-              whileHover='active'
-              className='text-2xs nav-text relative'
-              onClick={() => handlePlanetChange(planetName)}>
-              <Link
-                to={`/${planetName.toLocaleLowerCase()}/${getLastPathSegment(pathname)}`}>
+              to={`/${planetName.toLocaleLowerCase()}/${getLastPathSegment(pathname)}`}>
+              <motion.li
+                variants={navItemVariants}
+                initial='hidden'
+                animate='visible'
+                custom={[index, isActive]}
+                whileHover='active'
+                className='text-2xs nav-text relative'
+                onClick={() => handlePlanetChange(planetName)}>
                 {planetName}
-              </Link>
 
-              {isActive && (
-                <ActiveUnderline
-                  planetName={planetName.toLocaleLowerCase()}
-                  className='active-underline'
-                />
-              )}
-            </motion.li>
+                {isActive && (
+                  <ActiveUnderline
+                    planetName={planetName.toLocaleLowerCase()}
+                    className='active-underline h-4'
+                  />
+                )}
+              </motion.li>
+            </Link>
           );
         })}
       </AnimateSharedLayout>

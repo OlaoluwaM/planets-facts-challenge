@@ -1,8 +1,29 @@
 const colors = require('tailwindcss/colors');
 const customColors = require('./src/context/build/context/theme.js');
 
+function convertThemeObjIntoClasses(themeObj) {
+  return Object.keys(themeObj).flatMap(outerKey => {
+    const propertyKeys = Object.keys(themeObj[outerKey]);
+
+    return propertyKeys.flatMap(innerKey => {
+      if (innerKey === 'DEFAULT') return [`text-${outerKey}`, `bg-${outerKey}`];
+
+      return [`text-${outerKey}-${innerKey}`, `bg-${outerKey}-${innerKey}`];
+    });
+  });
+}
+
+const { planet, ...restOfTheme } = customColors.themeObj;
+const customColorsSafelist = convertThemeObjIntoClasses(restOfTheme);
+const customPlanetColorsSafeList = convertThemeObjIntoClasses(planet);
+
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  purge: {
+    content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+    options: {
+      safelist: [...customColorsSafelist, ...customPlanetColorsSafeList],
+    },
+  },
   presets: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
